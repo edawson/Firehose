@@ -12,12 +12,12 @@ except ImportError:
     print "pip install numpy"
     print "pip install matplotlib"
     print "pip install pandas"
-from Firehose.FirehosePreprocess import rename_samples
-from Firehose.FirehosePreprocess import get_only_tumor_samples
-from Firehose.FirehosePreprocess import process_file
-from Firehose.FirehosePreprocess import df_to_filename
-from Firehose.FirehosePreprocess import print_stats
-from Firehose.FirehosePreprocess import filename_to_df
+from FirehosePreprocess import rename_samples
+from FirehosePreprocess import get_only_tumor_samples
+from FirehosePreprocess import process_file
+from FirehosePreprocess import df_to_filename
+from FirehosePreprocess import print_stats
+from FirehosePreprocess import filename_to_df
 
 
 def parse_args():
@@ -25,6 +25,7 @@ def parse_args():
     parser.add_argument("-i", dest="infile", default=None, type=str, required=True,
                         help="An Illumina methylation27 or 450 microarray file for preprocessing.")
     return parser.parse_args()
+
 
 def process_methylation(df):
     """Takes in a pandas DataFrame and performs a variety of transformations
@@ -37,6 +38,9 @@ def process_methylation(df):
     6. Renames tumour samples to the first 12 characters of their TCGA identifier
     7. Removes any extraneous header lines
     8. Prints some basic stats about the DataFrame."""
+
+    print df
+    exit(0)
     ## Keep only columns referring to Beta Values
     col_to_bool = {x[0]: x[1] for x in zip(df.columns, np.array(df.ix["Composite Element REF"] == "Beta_value"))}
     betas = df[[x for x in col_to_bool if col_to_bool[x]]]
@@ -46,6 +50,7 @@ def process_methylation(df):
     col_to_bool = {x[0]: x[1] for x in zip(df.columns, np.array(df.ix["Composite Element REF"] == "Gene_Symbol"))}
     genes = df[[x for x in col_to_bool if col_to_bool[x]][1]]
     genes = genes.fillna("NA")
+
     betas.index = genes
 
     ## Change the name of the beta value index to "Gene" rather than "Gene Symbol"

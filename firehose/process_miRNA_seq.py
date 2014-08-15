@@ -24,34 +24,42 @@ from FirehosePreprocess import z_score_transform
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", dest="infile", default=None, type=str, required=True,
-                        help="An mRNA seq file from the Broad Firehose for preprocessing.")
+                        help="A microRNA seq file from the Broad Firehose for preprocessing.")
     return parser.parse_args()
 
 
-def process_rna_seq(df):
+def process_mirnaseq(df):
+    """Takes in a data file containing miRNAseq data
+    and processes it as follows:
+    1. Remove any non-human miRNAs
+    2. Remove any samples not from primary tumors
+    3. Remove the MIMAT identifier from miRNA names
+    4. Rename tumour samples to their 12-character TCGA sample identifier
+    5. Remove any extraneous header lines known to exist in TCGA data
+    6. Print some basic stats and write to outfile
+    7. Z-score transform the data and write out as a separate file"""
+
     ## Only keep tumor samples (no metastases/normals)
     df = get_only_tumor_samples(df)
-    ## Remove ? genes
-    df.drop([x for x in df.index if "?" in x], axis=0, inplace=True)
 
-    ## Change labels and
-    ## Fix SLC misnomer
-    # SLC35E2|728661 to SLC35E2B|728661
-    df = df.rename(index={x: x.split("|")[0] if not "SLC35E2|728661" == x else "SLC35E2B" for x in df.index})
+    ## Remove any non human samples
+    df = df.drop([x for x in df.index if "hsa" not in x], axis=0)
+
+    ## Change labels to their shorter identifier
+    df = df.rename(index={x: x.split("|")[0] for x in df.index})
+
     df = rename_samples(df)
     df = process_file(df)
-    df = df.dropna(axis=[0, 1], how="all")
-    print_stats(df, "messenger RNA Seq")
+    print_stats(df, "microRNA-Seq")
     return df
 
 if __name__ == "__main__":
     args = parse_args()
     dat = filename_to_df(args.infile)
-    dat = process_rna_seq(dat)
+    dat = process_mirnaseq(dat)
     out_name = ".".join([".".join((args.infile).split(".")[:-1]), "processed.txt"])
     df_to_filename(dat, out_name)
 
     zed = z_score_transform(dat)
     out_name = ".".join([".".join((args.infile).split(".")[:-1]), "zscore.processed.txt"])
     df_to_filename(zed, out_name)
-

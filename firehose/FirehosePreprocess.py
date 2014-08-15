@@ -52,47 +52,6 @@ file_patterns = [".miRseq_mature_RPM_log2.txt",
 tmpdir = cancer_dir + "tmp"
 
 
-def get_files(cancer_type, date):
-    """Wraps the Firehose_get utility. Downloads the latest
-    stddata and analysis tracks unless a date is specified"""
-    return #TODO
-
-
-## TODO
-## Untars a set of files in the input directory and
-## places them in a temporary directory for analysis.
-## This directory is removed after analysis completes
-def untar_and_relocate():
-    c_dir = os.getcwd()
-    os.chdir(tar_dir)
-    for entity in os.listdir(os.getcwd()):
-        if "stddata" in entity:
-            process_stddata_files(entity)
-        elif "analyses" in entity:
-            process_analyses_files(entity)
-        else:
-            continue
-    os.chdir(c_dir)
-
-    return #TODO
-
-
-def process_stddata_files(stddata_dir):
-    c_dir = os.getcwd()
-    os.chdir(stddata_dir)
-    return
-
-
-def process_analyses_files(analyses_dir):
-    c_dir = os.getcwd()
-    os.chdir(analyses_dir)
-    return
-
-
-def cleanup_and_output(dframes, tmpdir):
-    return
-
-
 def run_analyses():
     os.chdir(cancer_dir)
 
