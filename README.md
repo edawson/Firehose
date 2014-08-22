@@ -61,13 +61,19 @@ Usage should be consistent across the entire package (with one caveat we'll get 
 
 That's it! Currently there are no options for fine-tuning processing because these scripts try
 to stay as minimalistic as possible. As time goes on usage may be subject to change, but
-the above usage will **always** perform the standard transformations.
+the above usage will **always** perform the standard transformations.  
+
+
+Running the FirehosePreprocess script will perform the batch preprocessing of the entire set of files
+(miRNA, mRNA, CNV, methylation, and MAF). Its usage is a little ugly but will be improved upon in the
+future. You'll need to modify the variables directly at the top of the script; I promise to make this better
+as time permits.
 
 ## Contacting the Author
 If you use these scripts please make sure to credit where they came from:
 
->Eric T. Dawson</br>
->github.com/edawson/Firehose<br/>
+>Eric T. Dawson</br>  
+>github.com/edawson/Firehose</br>  
 >erictdawson.com
 
 If you would like to contact the author for comments, criticism, or praise, he can be reached
